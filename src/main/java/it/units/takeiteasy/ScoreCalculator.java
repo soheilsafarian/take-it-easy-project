@@ -1,8 +1,9 @@
 package it.units.takeiteasy;
 
+import java.util.function.Function;
+
 public class ScoreCalculator {
 
-    // خطوط افقی
     private static final int[][] HORIZONTAL_LINES = {
             {0, 1, 2},
             {3, 4, 5, 6},
@@ -11,7 +12,6 @@ public class ScoreCalculator {
             {16, 17, 18}
     };
 
-    // خطوط مورب چپ ↙
     private static final int[][] DIAGONAL_LEFT_LINES = {
             {0, 3, 7},
             {1, 4, 8, 12},
@@ -20,7 +20,6 @@ public class ScoreCalculator {
             {11, 15, 18}
     };
 
-    // خطوط مورب راست ↘
     private static final int[][] DIAGONAL_RIGHT_LINES = {
             {2, 6, 11},
             {1, 5, 10, 15},
@@ -33,76 +32,44 @@ public class ScoreCalculator {
 
         int score = 0;
 
-        // امتیاز افقی
         for (int[] line : HORIZONTAL_LINES) {
-            score += scoreHorizontalLine(board, line);
+            score += scoreLine(board, line, Tile::getHorizontal);
         }
 
-        // امتیاز مورب چپ
         for (int[] line : DIAGONAL_LEFT_LINES) {
-            score += scoreDiagonalLeftLine(board, line);
+            score += scoreLine(board, line, Tile::getDiagonalLeft);
         }
 
-        // امتیاز مورب راست
         for (int[] line : DIAGONAL_RIGHT_LINES) {
-            score += scoreDiagonalRightLine(board, line);
+            score += scoreLine(board, line, Tile::getDiagonalRight);
         }
 
         return score;
     }
 
-    // -----------------------------
-    // Horizontal scoring
-    private int scoreHorizontalLine(Board board, int[] positions) {
+    private int scoreLine(Board board,
+                          int[] positions,
+                          Function<Tile, Integer> valueExtractor) {
 
         Tile first = board.getTile(positions[0]);
-        if (first == null) return 0;
 
-        int value = first.getHorizontal();
-
-        for (int pos : positions) {
-            Tile tile = board.getTile(pos);
-
-            if (tile == null) return 0;
-            if (tile.getHorizontal() != value) return 0;
+        if (first == null) {
+            return 0;
         }
 
-        return value * positions.length;
-    }
-
-    // -----------------------------
-    // Diagonal Left scoring
-    private int scoreDiagonalLeftLine(Board board, int[] positions) {
-
-        Tile first = board.getTile(positions[0]);
-        if (first == null) return 0;
-
-        int value = first.getDiagonalLeft();
+        int value = valueExtractor.apply(first);
 
         for (int pos : positions) {
+
             Tile tile = board.getTile(pos);
 
-            if (tile == null) return 0;
-            if (tile.getDiagonalLeft() != value) return 0;
-        }
+            if (tile == null) {
+                return 0;
+            }
 
-        return value * positions.length;
-    }
-
-    // -----------------------------
-    // Diagonal Right scoring
-    private int scoreDiagonalRightLine(Board board, int[] positions) {
-
-        Tile first = board.getTile(positions[0]);
-        if (first == null) return 0;
-
-        int value = first.getDiagonalRight();
-
-        for (int pos : positions) {
-            Tile tile = board.getTile(pos);
-
-            if (tile == null) return 0;
-            if (tile.getDiagonalRight() != value) return 0;
+            if (!valueExtractor.apply(tile).equals(value)) {
+                return 0;
+            }
         }
 
         return value * positions.length;

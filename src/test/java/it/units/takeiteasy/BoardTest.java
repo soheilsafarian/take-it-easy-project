@@ -31,3 +31,4 @@ class BoardTest {
         assertFalse(board.isFull());
     }
 }
+

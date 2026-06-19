@@ -2,7 +2,7 @@
 
 This project is a command-line implementation of the board game **Take It Easy**.
 
-Developed as part of the Software Engineering course at the University of Trieste.
+Developed as part of the Software development course at the University of Trieste.
 
 ---
 
@@ -26,4 +26,3 @@ Run the `Main` class:
 
 ```bash
 mvn compile
-mvn exec:java

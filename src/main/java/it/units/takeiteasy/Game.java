@@ -11,31 +11,31 @@ public class Game {
     private final Scanner scanner;
 
     public Game() {
-        board = new Board();
-        deck = new Deck();
-        printer = new BoardPrinter();
-        calculator = new ScoreCalculator();
-        scanner = new Scanner(System.in);
+        this(new Scanner(System.in));
+    }
+
+    public Game(Scanner scanner) {
+        this.board = new Board();
+        this.deck = new Deck();
+        this.printer = new BoardPrinter();
+        this.calculator = new ScoreCalculator();
+        this.scanner = scanner;
     }
 
     public void start() {
 
         System.out.println("=== Welcome to Take It Easy ===");
 
-        // Game loop
         while (!board.isFull() && !deck.isEmpty()) {
 
-            // Draw ONE tile
             Tile currentTile = deck.drawTile();
 
             boolean placed = false;
 
-            // Keep asking until the tile is placed correctly
             while (!placed) {
 
                 System.out.println("\nYour tile is: " + currentTile);
 
-                System.out.println("Current Board:");
                 printer.print(board);
 
                 int position = askPosition();
@@ -49,9 +49,13 @@ public class Game {
             }
         }
 
-        // GAME OVER
         System.out.println("\n=== GAME OVER ===");
-        System.out.println("Board is full!");
+
+        if (board.isFull()) {
+            System.out.println("Board is full!");
+        } else {
+            System.out.println("No more tiles available!");
+        }
 
         printer.print(board);
 
@@ -61,7 +65,6 @@ public class Game {
         System.out.println("Thanks for playing!");
     }
 
-    // Ask user for a valid position
     private int askPosition() {
 
         while (true) {
@@ -76,7 +79,7 @@ public class Game {
 
             int pos = scanner.nextInt();
 
-            if (pos < 0 || pos > 18) {
+            if (pos < 0 || pos >= Board.BOARD_SIZE) {
                 System.out.println("❌ Position must be between 0 and 18.");
                 continue;
             }

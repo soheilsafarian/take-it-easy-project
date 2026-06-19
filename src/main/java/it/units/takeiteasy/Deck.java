@@ -6,6 +6,10 @@ import java.util.List;
 
 public class Deck {
 
+    private static final int[] VERTICAL_VALUES = {1, 5, 9};
+    private static final int[] DIAGONAL_LEFT_VALUES = {2, 6, 7};
+    private static final int[] DIAGONAL_RIGHT_VALUES = {3, 4, 8};
+
     private final List<Tile> tiles;
 
     public Deck() {
@@ -16,15 +20,11 @@ public class Deck {
 
     private void generateAllTiles() {
 
-        int[] horizontals = {1, 5, 9};
-        int[] diagonalLefts = {2, 6, 10};
-        int[] diagonalRights = {3, 7, 11};
+        for (int v : VERTICAL_VALUES) {
+            for (int dl : DIAGONAL_LEFT_VALUES) {
+                for (int dr : DIAGONAL_RIGHT_VALUES) {
 
-        for (int h : horizontals) {
-            for (int dl : diagonalLefts) {
-                for (int dr : diagonalRights) {
-
-                    tiles.add(new Tile(h, dl, dr));
+                    tiles.add(new Tile(v, dl, dr));
                 }
             }
         }
