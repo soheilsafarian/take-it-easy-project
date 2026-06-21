@@ -6,7 +6,7 @@ import java.util.List;
 
 public class Deck {
 
-    private static final int[] VERTICAL_VALUES = {1, 5, 9};
+    private static final int[] HORIZONTAL_VALUES = {1, 5, 9};
     private static final int[] DIAGONAL_LEFT_VALUES = {2, 6, 7};
     private static final int[] DIAGONAL_RIGHT_VALUES = {3, 4, 8};
 
@@ -20,7 +20,7 @@ public class Deck {
 
     private void generateAllTiles() {
 
-        for (int v : VERTICAL_VALUES) {
+        for (int v : HORIZONTAL_VALUES) {
             for (int dl : DIAGONAL_LEFT_VALUES) {
                 for (int dr : DIAGONAL_RIGHT_VALUES) {
 
