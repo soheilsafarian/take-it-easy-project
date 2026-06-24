@@ -1,5 +1,6 @@
 package it.units.takeiteasy;
 
+import java.io.PrintStream;
 import java.util.Scanner;
 
 public class Game {
@@ -9,22 +10,24 @@ public class Game {
     private final BoardPrinter printer;
     private final ScoreCalculator calculator;
     private final Scanner scanner;
+    private final PrintStream output;
 
     public Game() {
-        this(new Scanner(System.in));
+        this(new Scanner(System.in), System.out);
     }
 
-    public Game(Scanner scanner) {
+    public Game(Scanner scanner, PrintStream output) {
         this.board = new Board();
         this.deck = new Deck();
         this.printer = new BoardPrinter();
         this.calculator = new ScoreCalculator();
         this.scanner = scanner;
+        this.output = output;
     }
 
     public void start() {
 
-        System.out.println("=== Welcome to Take It Easy ===");
+        output.println("=== Welcome to Take It Easy ===");
 
         while (!board.isFull() && !deck.isEmpty()) {
 
@@ -34,45 +37,45 @@ public class Game {
 
             while (!placed) {
 
-                System.out.println("\nYour tile is: " + currentTile);
+                output.println("\nYour tile is: " + currentTile);
 
-                printer.print(board);
+                output.println(printer.buildBoard(board));
 
                 int position = askPosition();
 
                 if (board.placeTile(position, currentTile)) {
-                    System.out.println("✅ Tile placed successfully!");
+                    output.println("✅ Tile placed successfully!");
                     placed = true;
                 } else {
-                    System.out.println("❌ That position is occupied. Try again.");
+                    output.println("❌ That position is occupied. Try again.");
                 }
             }
         }
 
-        System.out.println("\n=== GAME OVER ===");
+        output.println("\n=== GAME FINISHED ===");
 
         if (board.isFull()) {
-            System.out.println("Board is full!");
+            output.println("Board is full!");
         } else {
-            System.out.println("No more tiles available!");
+            output.println("No more tiles available!");
         }
 
-        printer.print(board);
+        output.println(printer.buildBoard(board));
 
         int finalScore = calculator.calculate(board);
 
-        System.out.println("\n🎯 Final Score: " + finalScore);
-        System.out.println("Thanks for playing!");
+        output.println("\n🎯 Final Score: " + finalScore);
+        output.println("Thanks for playing!");
     }
 
     private int askPosition() {
 
         while (true) {
 
-            System.out.print("Choose position (0-18): ");
+            output.print("Choose position (0-18): ");
 
             if (!scanner.hasNextInt()) {
-                System.out.println("❌ Please enter a number!");
+                output.println("❌ Please enter a number!");
                 scanner.next();
                 continue;
             }
@@ -80,7 +83,7 @@ public class Game {
             int pos = scanner.nextInt();
 
             if (pos < 0 || pos >= Board.BOARD_SIZE) {
-                System.out.println("❌ Position must be between 0 and 18.");
+                output.println("❌ Position must be between 0 and 18.");
                 continue;
             }
 
